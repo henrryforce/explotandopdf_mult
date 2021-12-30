@@ -78,8 +78,8 @@
    <widget class="QPushButton" name="btnGenerar">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>180</y>
+      <x>120</x>
+      <y>230</y>
       <width>201</width>
       <height>51</height>
      </rect>
@@ -118,6 +118,42 @@ color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
      <string>Salir</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblserie">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>180</y>
+      <width>221</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Ingresa el numero de la serie</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txtSerie">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>180</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

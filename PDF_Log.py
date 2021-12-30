@@ -4,12 +4,76 @@ import os
 import openpyxl
 from PyQt5.QtWidgets import QFileDialog
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
+    def limpiaExtra(self,hojaT):
+        for i in range(0,self.numpags):
+            for j in range(0,6):
+                for k in range(0,10):                    
+                    #print(hojaT[i][j][k][0])
+                    hojaT[i][j][k][0] = hojaT[i][j][k][0].replace("x","")
+                    hojaT[i][j][k][0] = hojaT[i][j][k][0].replace("=","")
+                    hojaT[i][j][k][1] = hojaT[i][j][k][1].replace("x","")
+                    hojaT[i][j][k][1] = hojaT[i][j][k][1].replace("=","")
+                    hojaT[i][j][k][2] = hojaT[i][j][k][2].replace("x","")
+                    hojaT[i][j][k][2] = hojaT[i][j][k][2].replace("=","")
+        return hojaT
     def separaMultiplos(self,a):
-        return a.split(sep=' x ')
+        a=a.replace("=","")        
+        if a.find("x") == -1:
+            return a.split("X")
+        else:
+            return a.split("x")
+        #    return a.split("x ")
+        #if a.find(" x ") == -1:
+        #    return a.split("x ")
+        #else:
+        #    return a.split(" x ")
     def generaReportes(self):
-        print('none now')
-    def generarExcel(self):
-        print('none now')
+        serie = self.txtSerie.text()
+        if(serie!= ''):
+            self.generarExcel(serie)
+    def generarExcel(self,serie):
+        book = openpyxl.load_workbook('plantilla.xlsx',data_only=False)
+        hoja = book.active
+        for numPag in range(0,self.numpags):
+            miniT = self.paginas[numPag]
+            for i in range(0,6):
+                if i == 0:
+                    for j in range(0,10):
+                        hoja.cell(row = 23+j,column =1, value=int(miniT[i][j][0]))
+                        hoja.cell(row = 23+j,column =2, value=int(miniT[i][j][1].replace(",","")))
+                        hoja.cell(row = 23+j,column =3, value='x')
+                        hoja.cell(row = 23+j,column =4, value=int(miniT[i][j][2].replace(",","")))
+                if i == 1:
+                    for j in range(0,10):
+                        hoja.cell(row = 13+j,column =1, value=int(miniT[i][j][0]))
+                        hoja.cell(row = 13+j,column =2, value=int(miniT[i][j][1]))
+                        hoja.cell(row = 13+j,column =3, value='x')
+                        hoja.cell(row = 13+j,column =4, value=int(miniT[i][j][2].replace(",","")))
+                if i == 2:
+                    for j in range(0,10):
+                        hoja.cell(row = 3+j,column =1, value=int(miniT[i][j][0]))
+                        hoja.cell(row = 3+j,column =2, value=int(miniT[i][j][1]))
+                        hoja.cell(row = 3+j,column =3, value='x')
+                        hoja.cell(row = 3+j,column =4, value=int(miniT[i][j][2].replace(",","")))
+                if i == 3:
+                    for j in range(0,10):
+                        hoja.cell(row = 53+j,column =1, value=int(miniT[i][j][0]))
+                        hoja.cell(row = 53+j,column =2, value=int(miniT[i][j][1]))
+                        hoja.cell(row = 53+j,column =3, value='x')
+                        hoja.cell(row = 53+j,column =4, value=int(miniT[i][j][2].replace(",","")))
+                if i == 4:
+                    for j in range(0,10):
+                        hoja.cell(row = 43+j,column =1, value=int(miniT[i][j][0]))
+                        hoja.cell(row = 43+j,column =2, value=int(miniT[i][j][1]))
+                        hoja.cell(row = 43+j,column =3, value='x')
+                        hoja.cell(row = 43+j,column =4, value=int(miniT[i][j][2].replace(",","")))
+                if i == 5:
+                    for j in range(0,10):
+                        hoja.cell(row = 33+j,column =1, value=int(miniT[i][j][0]))
+                        hoja.cell(row = 33+j,column =2, value=int(miniT[i][j][1]))
+                        hoja.cell(row = 33+j,column =3, value='x')
+                        hoja.cell(row = 33+j,column =4, value=int(miniT[i][j][2].replace(",","")))
+            book.save('ejercicios'+str(int(serie)+numPag)+'.xlsx')
     def creaListaDePagina(self,pagActiva):
         #Recibimos la pagina activa del documento y creamos un txt con la info para despues leerla
         salida = open("prueba.txt","wb")
@@ -107,7 +171,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 tabla[i].append(multipR[j][i])
             hojaT.append(tabla)
             tabla = []
-        hojaT.append(contHojaActiva[0])
+        
         return hojaT
        
     def __init__(self, *args, **kwargs):
@@ -116,15 +180,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btnSalir.clicked.connect(self.close)
         self.btnAbrir.clicked.connect(self.LeePDF)
         self.btnGenerar.clicked.connect(self.generaReportes)
+        self.paginas=[]
+        self.numpags = ''
     def LeePDF(self):       
         pdf = QFileDialog.getOpenFileName(self, 'Open a file', '','All Files (*.*)')
         docum = fitz.open(pdf[0])
         numberOfpages=docum.pageCount
+        self.numpags = numberOfpages
         pagina=[]
         for i in range(0,numberOfpages):
-            pagina = self.creaListaDePagina(docum.load_page(i))
-            for j in pagina:
-                print(j)
+            pagina.append(self.creaListaDePagina(docum.load_page(i)))
+        self.paginas = pagina   
+        #self.paginas = self.limpiaExtra(pagina)
         
 
 if __name__ == "__main__":
